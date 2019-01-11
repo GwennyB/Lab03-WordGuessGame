@@ -9,28 +9,29 @@ namespace WordGuessGame
         {
             bool runMainMenu = true;
             string path = ("../../../wordBank.txt");
-            // MakeWordBank(path);
-            // ReadWordBank(path);
+            MainMenu(runMainMenu,path);
             /*while (runMainMenu)
             {
                 runMainMenu = MainMenu(runMainMenu);
             }*/
         }
 
-        static bool MainMenu(bool runMainMenu)
+        static bool MainMenu(bool runMainMenu, string path)
         {
-            // display menu
-            Console.Clear();
-            Console.WriteLine("Please select an option: ");
-            Console.WriteLine("(1) Play New Game");
-            Console.WriteLine("(2) Administration Options");
-            Console.WriteLine("(3) Exit Program");
-
             // receive and validate direction from user
             string selected = "";
             try
             {
-                selected = Console.ReadLine();
+                while (selected != "1" && selected != "2" && selected != "3")
+                {
+                    // display menu
+                    Console.Clear();
+                    Console.WriteLine("Please select an option: ");
+                    Console.WriteLine("(1) Play New Game");
+                    Console.WriteLine("(2) Administration Options");
+                    Console.WriteLine("(3) Exit Program");
+                    selected = Console.ReadLine();
+                }
             }
             catch(Exception)
             {
@@ -43,10 +44,10 @@ namespace WordGuessGame
             switch (selected)
             {
                 case "1":
-                    NewGame();
+                    NewGame(path);
                     break;
                 case "2":
-                    Admin();
+                    Admin(path);
                     break;
                 case "3":
                     runMainMenu = false;
@@ -60,7 +61,7 @@ namespace WordGuessGame
             return runMainMenu;
         }
 
-        static void NewGame()
+        static void NewGame(string path)
         {
 
         }
@@ -87,19 +88,73 @@ namespace WordGuessGame
 
         }
 
-        static void PlayGame()
+        static void PlayGame(string path)
         {
 
         }
 
-        static void Admin()
+        static void Admin(string path)
         {
+            // receive and validate direction from user
+            string selected = "";
+            try
+            {
+                while (selected != "1" && selected != "2" && selected != "3" && selected != "4" && selected != "5")
+                {
+                    // display menu
+                    Console.Clear();
+                    Console.WriteLine("Please select an option: ");
+                    Console.WriteLine("(1) View all available words in the word bank");
+                    Console.WriteLine("(2) Add a new word to the word bank");
+                    Console.WriteLine("(3) Delete a word from the word bank");
+                    Console.WriteLine("(4) Rebuild the word bank");
+                    Console.WriteLine("(5) Return to Main Menu");
+                    selected = Console.ReadLine();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"\nInvalid entry. Press ENTER to try again.");
+                Console.ReadLine();
+                throw;
+            }
+
+            // route to menu selection
+            switch (selected)
+            {
+                case "1": // view all words
+                    string[] words = ReadWordBank(path);
+                    //TODO: Print words to console
+                    break;
+                case "2": // add word
+                    Console.WriteLine("Please enter the word to add: ");
+                    string addWord = Console.ReadLine();
+                    // TODO: Add input validation and exception handling
+                    AddWord(path,addWord);
+                    break;
+                case "3": // delete word
+                    // TODO: Delete word logic
+                    break;
+                case "4": // trash and rebuild word bank file
+                    MakeWordBank(path);
+                    break;
+                case "5":
+                    MainMenu(true, path); // return home
+                    break;
+                default: // none identified - all other cases excluded by 'while' conditions
+                    break;
+            }
+
+
+
+
 
         }
 
-        static void AddWord()
+        static void AddWord(string path, string addWord)
         {
-
+            string[] newWord = { addWord };
+            File.AppendAllLines(path, newWord);
         }
 
         static void DeleteWord()
