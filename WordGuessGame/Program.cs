@@ -38,8 +38,10 @@ namespace WordGuessGame
             switch (selected)
             {
                 case "1":
+                    NewGame();
                     break;
                 case "2":
+                    Admin();
                     break;
                 case "3":
                     runMainMenu = false;
