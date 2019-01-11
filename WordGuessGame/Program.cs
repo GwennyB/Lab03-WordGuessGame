@@ -8,10 +8,12 @@ namespace WordGuessGame
         static void Main(string[] args)
         {
             bool runMainMenu = true;
-            while (runMainMenu)
+            string path = ("../../../wordBank.txt");
+            MakeWordBank(path);
+            /*while (runMainMenu)
             {
                 runMainMenu = MainMenu(runMainMenu);
-            }
+            }*/
         }
 
         static bool MainMenu(bool runMainMenu)
@@ -95,6 +97,32 @@ namespace WordGuessGame
 
         }
 
+        static void MakeWordBank(string path)
+        {
+            try
+            {
+                using (StreamWriter streamWriter = new StreamWriter(path))
+                {
+                    streamWriter.WriteLine("baby");
+                    streamWriter.WriteLine("door");
+                    streamWriter.WriteLine("banana");
+                    streamWriter.WriteLine("finger");
+                    streamWriter.WriteLine("fence");
+                    streamWriter.WriteLine("big");
+                    streamWriter.WriteLine("swimming");
+                    streamWriter.WriteLine("pool");
+                    streamWriter.WriteLine("sun");
+                    streamWriter.WriteLine("church");
+                    streamWriter.WriteLine("boy");
+                    streamWriter.WriteLine("bag");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 
     /*
