@@ -71,8 +71,6 @@ namespace WordGuessGame
             try
             {
                 string[] lines = File.ReadAllLines(path);
-                Console.WriteLine($"Line 1: {lines[0]}");
-                Console.ReadLine();
                 return lines;
             }
             catch (Exception)
@@ -123,20 +121,22 @@ namespace WordGuessGame
             switch (selected)
             {
                 case "1": // view all words
-                    string[] words = ReadWordBank(path);
-                    //TODO: Print words to console
+                    ViewWords(path);
+                    Admin(path);
                     break;
                 case "2": // add word
                     Console.WriteLine("Please enter the word to add: ");
                     string addWord = Console.ReadLine();
                     // TODO: Add input validation and exception handling
                     AddWord(path,addWord);
+                    Admin(path);
                     break;
                 case "3": // delete word
                     // TODO: Delete word logic
                     break;
                 case "4": // trash and rebuild word bank file
                     MakeWordBank(path);
+                    Admin(path);
                     break;
                 case "5":
                     MainMenu(true, path); // return home
@@ -162,9 +162,16 @@ namespace WordGuessGame
 
         }
 
-        static void ViewWords()
+        static void ViewWords(string path)
         {
-            //string words = ReadWordBank();
+            string[] words = ReadWordBank(path);
+
+            Console.WriteLine("\nThese words are available for random selection:");
+            foreach (string word in words)
+            {
+                Console.WriteLine(word);
+            }
+            Console.ReadLine();
         }
 
         static void MakeWordBank(string path)
