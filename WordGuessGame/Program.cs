@@ -127,7 +127,6 @@ namespace WordGuessGame
                 case "2": // add word
                     Console.WriteLine("Please enter the word to add: ");
                     string addWord = Console.ReadLine();
-                    // TODO: Add input validation and exception handling
                     AddWord(path,addWord);
                     Admin(path);
                     break;
@@ -146,15 +145,35 @@ namespace WordGuessGame
             }
 
 
-
-
-
         }
 
         static void AddWord(string path, string addWord)
         {
-            string[] newWord = { addWord };
-            File.AppendAllLines(path, newWord);
+            if(ValidateNewWord(addWord))
+            {
+                string[] newWord = { addWord };
+                File.AppendAllLines(path, newWord);
+            }
+            else
+            {
+                Console.WriteLine("Sorry, no special characters or numerals allowed.");
+                Console.ReadLine();
+            }
+        }
+
+        static bool ValidateNewWord(string addWord)
+        {
+            char[] notAllowed = { ' ', ',', '.', ':', '\t',';','!','@','#','$','%','^','&'
+            ,'*','(',')','-','_','/','|','[',']','{','}','<','>','?','1','2','3','4','5','6','7','8','9','0'};
+
+            foreach (char badChar in notAllowed)
+            {
+                if(addWord.Contains(badChar))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         static void DeleteWord()
