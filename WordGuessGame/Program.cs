@@ -122,16 +122,16 @@ namespace WordGuessGame
             {
                 case "1": // view all words
                     ViewWords(path);
+                    Console.ReadLine();
                     Admin(path);
                     break;
                 case "2": // add word
-                    Console.WriteLine("Please enter the word to add: ");
-                    string addWord = Console.ReadLine();
-                    AddWord(path,addWord);
+                    AddWord(path);
                     Admin(path);
                     break;
                 case "3": // delete word
-                    // TODO: Delete word logic
+                    DeleteWord(path);
+                    Admin(path);
                     break;
                 case "4": // trash and rebuild word bank file
                     MakeWordBank(path);
@@ -143,13 +143,13 @@ namespace WordGuessGame
                 default: // none identified - all other cases excluded by 'while' conditions
                     break;
             }
-
-
         }
 
-        static void AddWord(string path, string addWord)
+        static void AddWord(string path)
         {
-            if(ValidateNewWord(addWord))
+            Console.WriteLine("Please enter the word to add: ");
+            string addWord = Console.ReadLine();
+            if (ValidateNewWord(addWord))
             {
                 string[] newWord = { addWord };
                 File.AppendAllLines(path, newWord);
@@ -176,21 +176,38 @@ namespace WordGuessGame
             return true;
         }
 
-        static void DeleteWord()
+        static void DeleteWord(string path)
         {
-
+            Console.WriteLine("Which word would you like to delete?");
+            string[] words = ViewWords(path);
+            string selected = Console.ReadLine();
+            Console.WriteLine($"Word to delete: {selected}");
+            int indexToDelete = Array.IndexOf(words, selected);
+            Console.WriteLine($"Deleting index {indexToDelete}");
+            if (indexToDelete == -1)
+            {
+                Console.Write($"{selected} isn't in the list.");
+            }
+            else
+            {
+                words[indexToDelete] = words[words.Length - 1];
+                words[words.Length - 1] = null;
+                OverwriteWordBank(path, words);
+                Console.WriteLine("Done!");
+                Console.ReadLine();
+            }
         }
 
-        static void ViewWords(string path)
+        static string[] ViewWords(string path)
         {
             string[] words = ReadWordBank(path);
 
-            Console.WriteLine("\nThese words are available for random selection:");
+            Console.WriteLine("\nThese words are available in the word bank:");
             foreach (string word in words)
             {
-                Console.WriteLine(word);
+                Console.WriteLine($"*{word}*");
             }
-            Console.ReadLine();
+            return words;
         }
 
         static void MakeWordBank(string path)
@@ -219,6 +236,30 @@ namespace WordGuessGame
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        static void OverwriteWordBank(string path, string[] words)
+        {
+            try
+            {
+                File.Delete(path);
+
+                using (StreamWriter streamWriter = new StreamWriter(path))
+                {
+                    foreach (string word in words)
+                    {
+                        if(word != null)
+                        {
+                            streamWriter.WriteLine(word);
+                        }
+                    }
+                }
+                Console.WriteLine("Overwrite complete!");
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

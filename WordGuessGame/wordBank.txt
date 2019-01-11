@@ -9,7 +9,3 @@ pool
 sun
 church
 boy
-bag
-BBBBBBBBBBB
-bob
-2
