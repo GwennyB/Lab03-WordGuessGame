@@ -9,7 +9,8 @@ namespace WordGuessGame
         {
             bool runMainMenu = true;
             string path = ("../../../wordBank.txt");
-            MakeWordBank(path);
+            // MakeWordBank(path);
+            // ReadWordBank(path);
             /*while (runMainMenu)
             {
                 runMainMenu = MainMenu(runMainMenu);
@@ -19,6 +20,7 @@ namespace WordGuessGame
         static bool MainMenu(bool runMainMenu)
         {
             // display menu
+            Console.Clear();
             Console.WriteLine("Please select an option: ");
             Console.WriteLine("(1) Play New Game");
             Console.WriteLine("(2) Administration Options");
@@ -32,7 +34,8 @@ namespace WordGuessGame
             }
             catch(Exception)
             {
-                Console.WriteLine($"Invalid entry which produced. Starting over.");
+                Console.WriteLine($"\nInvalid entry. Press ENTER to try again.");
+                Console.ReadLine();
                 throw;
             }
 
@@ -62,9 +65,21 @@ namespace WordGuessGame
 
         }
 
-        static void ReadWordBank()
+        static string[] ReadWordBank(string path)
         {
-
+            try
+            {
+                string[] lines = File.ReadAllLines(path);
+                Console.WriteLine($"Line 1: {lines[0]}");
+                Console.ReadLine();
+                return lines;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"ERROR: Could not read file at {path}");
+                Console.ReadLine();
+                throw;
+            }
         }
 
         static void SetUpGame()
@@ -94,13 +109,15 @@ namespace WordGuessGame
 
         static void ViewWords()
         {
-
+            //string words = ReadWordBank();
         }
 
         static void MakeWordBank(string path)
         {
             try
             {
+                File.Delete(path);
+
                 using (StreamWriter streamWriter = new StreamWriter(path))
                 {
                     streamWriter.WriteLine("baby");
@@ -116,6 +133,7 @@ namespace WordGuessGame
                     streamWriter.WriteLine("boy");
                     streamWriter.WriteLine("bag");
                 }
+                Console.WriteLine("Successfully created word bank file.");
             }
             catch (Exception)
             {
