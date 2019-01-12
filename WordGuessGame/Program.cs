@@ -121,20 +121,28 @@ namespace WordGuessGame
             switch (selected)
             {
                 case "1": // view all words
+                    Console.Clear();
                     ViewWords(path);
+                    Console.WriteLine("\nPress ENTER to return to Administrative Menu.");
                     Console.ReadLine();
                     Admin(path);
                     break;
                 case "2": // add word
+                    Console.Clear();
                     AddWord(path);
                     Admin(path);
                     break;
                 case "3": // delete word
+                    Console.Clear();
                     DeleteWord(path);
                     Admin(path);
                     break;
                 case "4": // trash and rebuild word bank file
-                    MakeWordBank(path);
+                    Console.Clear();
+                    string[] words = { "baby", "door", "banana", "finger", "fence", "big", "swimming", "pool", "sun", "church", "boy", "bag" }; // seed file contents
+                    OverwriteWordBank(path, words);
+                    Console.WriteLine("\nWord bank rebuilt.  Press ENTER to return to the Administrative Menu.");
+                    Console.ReadLine();
                     Admin(path);
                     break;
                 case "5":
@@ -153,6 +161,8 @@ namespace WordGuessGame
             {
                 string[] newWord = { addWord };
                 File.AppendAllLines(path, newWord);
+                Console.WriteLine($"\nAdded {addWord} to the word bank.  Press ENTER to return to the Administrative Menu.");
+                Console.ReadLine();
             }
             else
             {
@@ -178,12 +188,11 @@ namespace WordGuessGame
 
         static void DeleteWord(string path)
         {
-            Console.WriteLine("Which word would you like to delete?");
+            Console.WriteLine("The word bank contains these words:");
             string[] words = ViewWords(path);
+            Console.WriteLine("\nWhich word would you like to delete?");
             string selected = Console.ReadLine();
-            Console.WriteLine($"Word to delete: {selected}");
             int indexToDelete = Array.IndexOf(words, selected);
-            Console.WriteLine($"Deleting index {indexToDelete}");
             if (indexToDelete == -1)
             {
                 Console.Write($"{selected} isn't in the list.");
@@ -193,8 +202,9 @@ namespace WordGuessGame
                 words[indexToDelete] = words[words.Length - 1];
                 words[words.Length - 1] = null;
                 OverwriteWordBank(path, words);
-                Console.WriteLine("Done!");
+                Console.WriteLine($"\nDeleted {selected} from the word bank.  Press ENTER to return to the Administrative Menu.");
                 Console.ReadLine();
+
             }
         }
 
@@ -205,47 +215,15 @@ namespace WordGuessGame
             Console.WriteLine("\nThese words are available in the word bank:");
             foreach (string word in words)
             {
-                Console.WriteLine($"*{word}*");
+                Console.WriteLine($"{word}");
             }
             return words;
-        }
-
-        static void MakeWordBank(string path)
-        {
-            try
-            {
-                File.Delete(path);
-
-                using (StreamWriter streamWriter = new StreamWriter(path))
-                {
-                    streamWriter.WriteLine("baby");
-                    streamWriter.WriteLine("door");
-                    streamWriter.WriteLine("banana");
-                    streamWriter.WriteLine("finger");
-                    streamWriter.WriteLine("fence");
-                    streamWriter.WriteLine("big");
-                    streamWriter.WriteLine("swimming");
-                    streamWriter.WriteLine("pool");
-                    streamWriter.WriteLine("sun");
-                    streamWriter.WriteLine("church");
-                    streamWriter.WriteLine("boy");
-                    streamWriter.WriteLine("bag");
-                }
-                Console.WriteLine("Successfully created word bank file.");
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
 
         static void OverwriteWordBank(string path, string[] words)
         {
             try
             {
-                File.Delete(path);
-
                 using (StreamWriter streamWriter = new StreamWriter(path))
                 {
                     foreach (string word in words)
@@ -256,7 +234,6 @@ namespace WordGuessGame
                         }
                     }
                 }
-                Console.WriteLine("Overwrite complete!");
             }
             catch (Exception)
             {
