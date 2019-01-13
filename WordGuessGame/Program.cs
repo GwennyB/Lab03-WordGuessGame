@@ -134,6 +134,7 @@ namespace WordGuessGame
                 }
                 if(ValidateNewWord(guess))
                 {
+                    allGuesses += guess + ", ";
                     char charGuess = guess.ToLower().ToCharArray()[0];
                     if (CheckGuess(letters,charGuess))
                     {
@@ -172,8 +173,8 @@ namespace WordGuessGame
                     Console.WriteLine("Invalid guess.  Try again.");
                     PrintGameBoard(spaces);
                 }
-                allGuesses += guess + ",";
             }
+            Console.WriteLine($"Your guesses: {allGuesses}");
             return wonGame;
         }
 

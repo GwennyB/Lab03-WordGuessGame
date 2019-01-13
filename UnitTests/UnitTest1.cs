@@ -32,6 +32,7 @@ namespace UnitTests
         {
             string testpath = ("../../../wordBank.txt");
             string[] testwords = { "aaa", "bbb", "ccc", "ddd" };
+            Program.OverwriteWordBank(testpath, testwords);
             Assert.Equal(testwords, Program.ViewWords(testpath));
         }
 
