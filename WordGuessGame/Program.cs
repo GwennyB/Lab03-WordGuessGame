@@ -235,7 +235,9 @@ namespace WordGuessGame
                     break;
                 case "2": // add word
                     Console.Clear();
-                    AddWord(path);
+                    Console.WriteLine("Please enter the word to add: ");
+                    string addWord = Console.ReadLine();
+                    AddWord(path, addWord);
                     Admin(path);
                     break;
                 case "3": // delete word
@@ -259,10 +261,8 @@ namespace WordGuessGame
             }
         }
 
-        public static bool AddWord(string path)
+        public static bool AddWord(string path, string addWord)
         {
-            Console.WriteLine("Please enter the word to add: ");
-            string addWord = Console.ReadLine();
             if (ValidateNewWord(addWord))
             {
                 string[] newWord = { addWord.ToLower() };

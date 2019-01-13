@@ -21,7 +21,8 @@ namespace UnitTests
         [Fact]
         public void AddWord_ReturnsTrue()
         {
-            Assert.True(Program.AddWord("testingtestingtesting"));
+            string testpath = ("../../../wordBank.txt");
+            Assert.True(Program.AddWord(testpath,"testingtestingtesting"));
         }
 
 
