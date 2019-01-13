@@ -111,14 +111,23 @@ namespace WordGuessGame
         {
             Console.WriteLine("Let's play!\n\n\n\n");
             bool wonGame = false;
-            string guess = "";
-            string allGuesses = "";
+
             PrintGameBoard(spaces);
+
+            string allGuesses = "";
+            string guess = "";
 
             while (spaces.Contains('\0'))
             {
                 Console.WriteLine("Choose a letter and press ENTER (or press ENTER to exit game):");
-                guess = Console.ReadLine();
+                try
+                {
+                    guess = Console.ReadLine();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("\n\n  NOTE: An exception occurred, but it's been caught. Please continue.\n\n");
+                }
                 if(guess == "")
                 {
                     return wonGame;
@@ -126,7 +135,7 @@ namespace WordGuessGame
                 if(ValidateNewWord(guess))
                 {
                     char charGuess = guess.ToLower().ToCharArray()[0];
-                    if (letters.Contains(charGuess))
+                    if (CheckGuess(letters,charGuess))
                     {
                         for (int i = 0; i < letters.Length; i++)
                         {
@@ -168,6 +177,10 @@ namespace WordGuessGame
             return wonGame;
         }
 
+        public static bool CheckGuess(char[] letters, char charGuess)
+        {
+            return letters.Contains(charGuess);
+        }
 
         static string[] ReadWordBank(string path)
         {
@@ -182,11 +195,6 @@ namespace WordGuessGame
                 Console.ReadLine();
                 throw;
             }
-        }
-
-        static void PlayGame(string path)
-        {
-
         }
 
         static void Admin(string path)
@@ -251,7 +259,7 @@ namespace WordGuessGame
             }
         }
 
-        static void AddWord(string path)
+        public static bool AddWord(string path)
         {
             Console.WriteLine("Please enter the word to add: ");
             string addWord = Console.ReadLine();
@@ -259,13 +267,13 @@ namespace WordGuessGame
             {
                 string[] newWord = { addWord.ToLower() };
                 File.AppendAllLines(path, newWord);
-                Console.WriteLine($"\nAdded {addWord} to the word bank.  Press ENTER to return to the Administrative Menu.");
-                Console.ReadLine();
+                Console.WriteLine($"\nAdded {addWord} to the word bank.");
+                return true;
             }
             else
             {
                 Console.WriteLine("Sorry, no special characters or numerals allowed.");
-                Console.ReadLine();
+                return false;
             }
         }
 
@@ -306,7 +314,7 @@ namespace WordGuessGame
             }
         }
 
-        static string[] ViewWords(string path)
+        public static string[] ViewWords(string path)
         {
             string[] words = ReadWordBank(path);
 
@@ -318,7 +326,7 @@ namespace WordGuessGame
             return words;
         }
 
-        static void OverwriteWordBank(string path, string[] words)
+        public static int OverwriteWordBank(string path, string[] words)
         {
             try
             {
@@ -337,6 +345,9 @@ namespace WordGuessGame
             {
                 throw;
             }
+            string[] linesInNewFile = ReadWordBank(path);
+            return linesInNewFile.Length;
+
         }
     }
 
