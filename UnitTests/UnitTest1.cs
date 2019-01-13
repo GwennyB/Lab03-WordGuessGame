@@ -6,8 +6,10 @@ namespace UnitTests
 {
     public class UnitTest1
     {
-        // Test that a file can be updated
-
+        /// <summary>
+        /// Test that a file can be updated
+        /// Looks for correct number of lines following overwrite with words list of known length
+        /// </summary>
         [Fact]
         public void OverwriteWordBank_ReturnsCorrectNumberOfLines()
         {
@@ -17,7 +19,9 @@ namespace UnitTests
         }
 
 
-        // Test that a word can be added to a file
+        /// <summary>
+        /// Test that a word can be added to a file
+        /// </summary>
         [Fact]
         public void AddWord_ReturnsTrue()
         {
@@ -26,7 +30,10 @@ namespace UnitTests
         }
 
 
-        // Test that you can retrieve all words from the file
+        /// <summary>
+        /// Test that you can retrieve all words from the file
+        /// builds a new word bank using known words and reads it back to confirm words are same
+        /// </summary>
         [Fact]
         public void ViewWords_ReturnsCorrectNumberOfLines()
         {
@@ -37,7 +44,10 @@ namespace UnitTests
         }
 
 
-        // Test that the word chosen can accurately detect if the letter exists in the word(test that a letter does exist and does not exist)
+        /// <summary>
+        /// Test that the word chosen can accurately detect if the letter exists in the word(test that a letter does exist and does not exist)
+        /// Checks for presence of correct guess in a known letters list
+        /// </summary>
         [Fact]
         public void CheckGuess_ReturnsTrueWhenFound()
         {
@@ -45,6 +55,10 @@ namespace UnitTests
             char charGuess = 'e';
             Assert.True(Program.CheckGuess(letters, charGuess));
         }
+        /// <summary>
+        /// Test that the word chosen can accurately detect if the letter exists in the word(test that a letter does exist and does not exist)
+        /// Checks for presence of incorrect guess in a known letters list
+        /// </summary>        
         [Fact]
         public void CheckGuess_ReturnsFalseWhenNotFound()
         {

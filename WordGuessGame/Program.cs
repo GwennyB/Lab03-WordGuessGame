@@ -6,6 +6,11 @@ namespace WordGuessGame
 {
     public class Program
     {
+        /// <summary>
+        /// Initializes the word bank with standard set of words.
+        /// Launches Main Menu and keeps it running until user quits.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             // set path for external word bank file
@@ -15,13 +20,20 @@ namespace WordGuessGame
             OverwriteWordBank(path, words);
 
             bool runMainMenu = true;
-            MainMenu(runMainMenu,path);
+            MainMenu(runMainMenu, path);
             while (runMainMenu)
             {
-                runMainMenu = MainMenu(runMainMenu,path);
+                runMainMenu = MainMenu(runMainMenu, path);
             }
         }
 
+        /// <summary>
+        /// Displays Main Menu.
+        /// Accepts, validates, and routes user selections.
+        /// </summary>
+        /// <param name="runMainMenu"> switches to 'false' when user wants to end program </param>
+        /// <param name="path"> path to external word bank file </param>
+        /// <returns> win or lose </returns>
         static bool MainMenu(bool runMainMenu, string path)
         {
             // receive and validate direction from user
@@ -39,7 +51,7 @@ namespace WordGuessGame
                     selected = Console.ReadLine();
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Console.WriteLine($"\nInvalid entry. Press ENTER to try again.");
                 Console.ReadLine();
@@ -67,12 +79,16 @@ namespace WordGuessGame
             return runMainMenu;
         }
 
+        /// <summary>
+        /// Launches new game.
+        /// Chooses word from word bank and calls game to start.
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
         static void NewGame(string path)
         {
             string selected = PickWord(path); // select word from word bank
             char[] letters = selected.ToCharArray(); // put lettes of word into an array
             char[] spaces = new Char[letters.Length]; // build array to hold game set
-
 
             Console.Clear();
 
@@ -81,6 +97,11 @@ namespace WordGuessGame
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Picks word from word bank at random.
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
+        /// <returns></returns>
         static string PickWord(string path)
         {
             Random random = new Random();
@@ -89,13 +110,17 @@ namespace WordGuessGame
             return words[selectedIndex];
         }
 
+        /// <summary>
+        /// Sets up and displays game board at game start and after each guess
+        /// </summary>
+        /// <param name="spaces"> state array - holds blanks and all correct guesses - used here to print board each round </param>
         static void PrintGameBoard(char[] spaces)
         {
             Console.WriteLine("\n\n");
             Console.Write("     ");
             for (int i = 0; i < spaces.Length; i++)
             {
-                if(spaces[i] == '\0')
+                if (spaces[i] == '\0')
                 {
                     Console.Write(" ___ ");
                 }
@@ -107,6 +132,14 @@ namespace WordGuessGame
             Console.WriteLine("\n\n");
         }
 
+        /// <summary>
+        /// Manages game state and controls flow of game play.
+        /// Interacts with user during game play.
+        /// Determines end of game, keeps track of guesses, oversees input validation and guess checking, deals with input acceptions.
+        /// </summary>
+        /// <param name="letters"> array holding letters of word in play </param>
+        /// <param name="spaces"> state array - holds blanks and all correct guesses - used here to capture state changes </param>
+        /// <returns> game won or lost </returns>
         static bool PlayGame(char[] letters, char[] spaces)
         {
             Console.WriteLine("Let's play!\n\n\n\n");
@@ -128,15 +161,15 @@ namespace WordGuessGame
                 {
                     Console.WriteLine("\n\n  NOTE: An exception occurred, but it's been caught. Please continue.\n\n");
                 }
-                if(guess == "")
+                if (guess == "")
                 {
                     return wonGame;
                 }
-                if(ValidateNewWord(guess))
+                if (ValidateNewWord(guess))
                 {
                     allGuesses += guess + ", ";
                     char charGuess = guess.ToLower().ToCharArray()[0];
-                    if (CheckGuess(letters,charGuess))
+                    if (CheckGuess(letters, charGuess))
                     {
                         for (int i = 0; i < letters.Length; i++)
                         {
@@ -146,7 +179,7 @@ namespace WordGuessGame
                                 letters[i] = '_';
                             }
                         }
-                        if(spaces.Contains('\0'))
+                        if (spaces.Contains('\0'))
                         {
                             Console.Clear();
                             Console.WriteLine("Great guess! Choose another?");
@@ -178,11 +211,22 @@ namespace WordGuessGame
             return wonGame;
         }
 
+        /// <summary>
+        /// Checks user's current guess against the letters that haven't been guessed yet
+        /// </summary>
+        /// <param name="letters"> array holding letters of word in play </param>
+        /// <param name="charGuess"> char representation of user's current guess </param>
+        /// <returns> guess is correct (true) or incorrect (false) </returns>
         public static bool CheckGuess(char[] letters, char charGuess)
         {
             return letters.Contains(charGuess);
         }
 
+        /// <summary>
+        /// Reads the current contents of the external word bank
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
+        /// <returns> list of words in the word bank </returns>
         static string[] ReadWordBank(string path)
         {
             try
@@ -198,6 +242,11 @@ namespace WordGuessGame
             }
         }
 
+        /// <summary>
+        /// Displays admin menu
+        /// Accepts, validates, and routes user selections.
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
         static void Admin(string path)
         {
             // receive and validate direction from user
@@ -262,6 +311,12 @@ namespace WordGuessGame
             }
         }
 
+        /// <summary>
+        /// Adds a word to the external word bank at user's direction (if word satisfies validation)
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
+        /// <param name="addWord"> the word that the user wants to add </param>
+        /// <returns> word added (true) or not added (false) </returns>
         public static bool AddWord(string path, string addWord)
         {
             if (ValidateNewWord(addWord))
@@ -278,6 +333,11 @@ namespace WordGuessGame
             }
         }
 
+        /// <summary>
+        /// Validates a word that the user wants to add to the word bank
+        /// </summary>
+        /// <param name="addWord"> the word that the user wants to add </param>
+        /// <returns> valid (true) or invalid (false) </returns>
         static bool ValidateNewWord(string addWord)
         {
             char[] notAllowed = { ' ', ',', '.', ':', '\t',';','!','@','#','$','%','^','&'
@@ -285,7 +345,7 @@ namespace WordGuessGame
 
             foreach (char badChar in notAllowed)
             {
-                if(addWord.Contains(badChar))
+                if (addWord.Contains(badChar))
                 {
                     return false;
                 }
@@ -293,6 +353,11 @@ namespace WordGuessGame
             return true;
         }
 
+        /// <summary>
+        /// Deletes a word from the external word bank (if contained)
+        /// Method: Reads file lines into array; overwrites element containing target word with last element; replaces last element with empty string; rebuilds the file with modified array
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
         static void DeleteWord(string path)
         {
             Console.WriteLine("The word bank contains these words:");
@@ -315,6 +380,11 @@ namespace WordGuessGame
             }
         }
 
+        /// <summary>
+        /// Displays all the words in the word bank
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
+        /// <returns> array of words from the word bank (for test only) </returns>
         public static string[] ViewWords(string path)
         {
             string[] words = ReadWordBank(path);
@@ -327,6 +397,12 @@ namespace WordGuessGame
             return words;
         }
 
+        /// <summary>
+        /// Overwrites current word bank with new list of words
+        /// </summary>
+        /// <param name="path"> path to external word bank file </param>
+        /// <param name="words"> words to write to the word bank </param>
+        /// <returns> number of lines in the word bank after overwrite </returns>
         public static int OverwriteWordBank(string path, string[] words)
         {
             try
@@ -335,7 +411,7 @@ namespace WordGuessGame
                 {
                     foreach (string word in words)
                     {
-                        if(word != null)
+                        if (word != null)
                         {
                             streamWriter.WriteLine(word);
                         }
@@ -351,72 +427,4 @@ namespace WordGuessGame
 
         }
     }
-
-    /*
-     * FUNCTIONAL FLOW
-     * Menu
-         * New Game
-            * access word bank
-            * read word bank
-            * Choose word
-            * Build array of chars from word
-            * Display blanks
-            * loop:
-                * read guess
-                * log guess
-                * check for guess in word
-                * (Y) display letter in blanks
-                    * check for word finished
-                    * (Y) congratulate
-                    * return to Menu
-                * feedback
-            * edge cases:
-            * enter num, special char, blank, enter, esc
-            * duplicate entries
-     *  Admin
-        *  view words
-            *  access word bank
-            *  read word bank lines
-            *  print words (lines) to console
-        *  add word
-            *  read admin input
-                *  validity check
-            *  access word bank
-            *  append to word bank
-        *  delete word
-            *  access word bank
-            *  read word bank
-            *  replace word to delete with end word
-            *  replace end word to blank
-            *  delete file
-            *  create new file
-            *  write modified array to new file
-     *  Exit
-     * 
-     * ARCHITECTURE
-     * 
-    */
-
-    /*
-    Josie Cat has requested that a “Word Guess Game” be built.The main idea of the game is she must guess what a mystery word is by inputting (1) letter at a time.The game should save all of her guesses (both correct and incorrect) throughout each session of the game, along with the ability to show her how many letters out of the word she has guessed correctly.
-
-    Each time a new game session starts, the mystery word chosen should come from an external text file that randomly selects one of the words listed.This bank of words should be editable by Josie so that she may view, add, and delete words as she wishes.She expects the game to have a simple user interface that is easy to navigate.
-
-    Using everything you’ve learned up to this point, create a word guess game that will meet all of the requirements described in the user story above.
-
-
-    Program Components
-    The program (should) contain the following:
-    Methods for each action (suggestions: Home navigation, View words in the external file, add a word to the external file, Remove words from a text file, exit the game, start a new game)
-    When playing a game, randomly select one of the words to output to the console for the user to guess(Use the Random class)
-    You should have a record of the letters they have attempted so far
-    If they guess a correct letter, display that letter in the console for them to refer back to when making guesses(i.e.C _ T S)
-    Your program does not need to be case sensitive.
-    Errors should be handled through Exception handling
-    Do not create external classes to accomplish this task.All code should live in the Program.cs file
-    Stay within scope, you may use the methods/classes listed below if desired.
-    Once the game is completed, the user should be presented with the option to “Play again” (a new random word is generated), or “Exit” (the program terminates)
-    the user should only be allowed to guess only 1 letter at a time.Do not make it so that they can input the whole alphabet and get the answer.
-    */
-
 }
