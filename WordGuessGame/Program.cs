@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace WordGuessGame
 {
@@ -7,13 +8,18 @@ namespace WordGuessGame
     {
         static void Main(string[] args)
         {
-            bool runMainMenu = true;
+            // set path for external word bank file
             string path = ("../../../wordBank.txt");
+            // initial set up of external word bank
+            string[] words = { "baby", "door", "banana", "finger", "fence", "big", "swimming", "pool", "sun", "church", "boy", "bag" }; // seed file contents
+            OverwriteWordBank(path, words);
+
+            bool runMainMenu = true;
             MainMenu(runMainMenu,path);
-            /*while (runMainMenu)
+            while (runMainMenu)
             {
-                runMainMenu = MainMenu(runMainMenu);
-            }*/
+                runMainMenu = MainMenu(runMainMenu,path);
+            }
         }
 
         static bool MainMenu(bool runMainMenu, string path)
@@ -63,8 +69,105 @@ namespace WordGuessGame
 
         static void NewGame(string path)
         {
+            string selected = PickWord(path); // select word from word bank
+            char[] letters = selected.ToCharArray(); // put lettes of word into an array
+            char[] spaces = new Char[letters.Length]; // build array to hold game set
 
+
+            Console.Clear();
+
+            bool wonGame = PlayGame(letters, spaces);
+            Console.WriteLine("(Press ENTER to return to Main Menu.)");
+            Console.ReadLine();
         }
+
+        static string PickWord(string path)
+        {
+            Random random = new Random();
+            string[] words = ReadWordBank(path);
+            int selectedIndex = random.Next(words.Length);
+            return words[selectedIndex];
+        }
+
+        static void PrintGameBoard(char[] spaces)
+        {
+            Console.WriteLine("\n\n");
+            Console.Write("     ");
+            for (int i = 0; i < spaces.Length; i++)
+            {
+                if(spaces[i] == '\0')
+                {
+                    Console.Write(" ___ ");
+                }
+                else
+                {
+                    Console.Write($" {spaces[i]} ");
+                }
+            }
+            Console.WriteLine("\n\n");
+        }
+
+        static bool PlayGame(char[] letters, char[] spaces)
+        {
+            Console.WriteLine("Let's play!\n\n\n\n");
+            bool wonGame = false;
+            string guess = "";
+            string allGuesses = "";
+            PrintGameBoard(spaces);
+
+            while (spaces.Contains('\0'))
+            {
+                Console.WriteLine("Choose a letter and press ENTER (or press ENTER to exit game):");
+                guess = Console.ReadLine();
+                if(guess == "")
+                {
+                    return wonGame;
+                }
+                if(ValidateNewWord(guess))
+                {
+                    char charGuess = guess.ToLower().ToCharArray()[0];
+                    if (letters.Contains(charGuess))
+                    {
+                        for (int i = 0; i < letters.Length; i++)
+                        {
+                            if (letters[i] == charGuess)
+                            {
+                                spaces[i] = letters[i];
+                                letters[i] = '_';
+                            }
+                        }
+                        if(spaces.Contains('\0'))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Great guess! Choose another?");
+                            PrintGameBoard(spaces);
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Great guess! You won!");
+                            wonGame = true;
+                            PrintGameBoard(spaces);
+                        }
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Aww...too bad. Try again.");
+                        PrintGameBoard(spaces);
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid guess.  Try again.");
+                    PrintGameBoard(spaces);
+                }
+                allGuesses += guess + ",";
+            }
+            return wonGame;
+        }
+
 
         static string[] ReadWordBank(string path)
         {
@@ -79,11 +182,6 @@ namespace WordGuessGame
                 Console.ReadLine();
                 throw;
             }
-        }
-
-        static void SetUpGame()
-        {
-
         }
 
         static void PlayGame(string path)
@@ -159,7 +257,7 @@ namespace WordGuessGame
             string addWord = Console.ReadLine();
             if (ValidateNewWord(addWord))
             {
-                string[] newWord = { addWord };
+                string[] newWord = { addWord.ToLower() };
                 File.AppendAllLines(path, newWord);
                 Console.WriteLine($"\nAdded {addWord} to the word bank.  Press ENTER to return to the Administrative Menu.");
                 Console.ReadLine();
@@ -192,7 +290,7 @@ namespace WordGuessGame
             string[] words = ViewWords(path);
             Console.WriteLine("\nWhich word would you like to delete?");
             string selected = Console.ReadLine();
-            int indexToDelete = Array.IndexOf(words, selected);
+            int indexToDelete = Array.IndexOf(words, selected.ToLower());
             if (indexToDelete == -1)
             {
                 Console.Write($"{selected} isn't in the list.");
