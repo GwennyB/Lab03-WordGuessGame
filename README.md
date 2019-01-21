@@ -26,12 +26,12 @@ These sample session images show:
  ![sample_session](assets/rebuild-confirmed.PNG)
  ![sample_session](assets/rebuilt-list.PNG)
 
-## How to use (*****UPDATE WITH MENU DETAILS*****)
+## How to use
 The application automatically initializes an external file of words (word bank) and launches a console window upon compile/run, and a menu of options is presented. Interaction requires only input of selections (1 to play, 2 for admin menu, or 3 to exit). Selecting 3 (exit) will end the session, and making an invalid selection will only reset the menu (exceptions will prompt for reset). 
 1 - New Game
 Game play begins with a word being randomly selected from word bank, which is converted to an array of characters. The game board is populated with an underline/blank for each letter in the selected word. The user enters letters as guesses (numbers and special characters are rejected, and exceptions are caught and played-through). The guess is compared to the letters array - all matching letters will be displayed in the game board along with underline/blanks for any letters not yet guessed. Rounds repeat until the entire word has been revealed through correct guesses or the user chooses to quit, and all guesses to that point are displayed for review.
 2 - Admin Menu
 The admin menu contains options to view the word bank, add to or delete from the word bank, rebuild the word bank (ie - re-initialize from the list used to populate it at program launch), and return to the main menu. Invalid selections are rejected; exceptions are caught and thrown back to the caller (ie - menu is reset).
 
-## Other details (*****UPDATE WITH ANY 'OTHER' DETAILS*****)
+## Other details
 Unit tests confirm that the word bank can be updated, that a word can be added to the word bank, that all words can be retrieved from the word bank, and that a guess can accurately be confirmed as correct and incorrect.
